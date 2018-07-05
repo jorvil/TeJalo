@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<Usuario> adapter;
 
-    private String url = "http://192.168.2.115:8888/";
+    private String url = "http://192.168.137.2:8888/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -24,7 +24,7 @@ public class PrincipalActivity extends AppCompatActivity implements AdapterView.
 
     private static final String[] OPTIONS = {
             "Mi Perfil",
-            "Mis Rutas",
+            "Mis Viajes",
             "Mis Reservas",
             "Cerrar Sesion"
     };
@@ -101,7 +101,7 @@ public class PrincipalActivity extends AppCompatActivity implements AdapterView.
                 break;
 
             case 1: //Mi Ruta
-                f = new RutaFragment();
+                f = new ViajeFragment();
                 break;
 
             case 2: //Mi Reserva

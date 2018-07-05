@@ -29,7 +29,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private Button btnLogin;
     private TextView txtCrear;
 
-    private String url = "http://192.168.2.115:8888/";
+    //private String url = "http://192.168.43.116:8888/";
+    private String url="http://intranet.fridaysperu.com:8888/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     if (resultado > 0) {
                         openActivity();
                     } else {
-                        Toast.makeText(getApplication(), "Usuario no existe", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplication(), "Usuario no existe o datos mal ingresados", Toast.LENGTH_LONG).show();
                     }
                 }
 

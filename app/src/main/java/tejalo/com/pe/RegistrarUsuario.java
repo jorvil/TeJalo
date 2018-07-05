@@ -37,7 +37,7 @@ public class RegistrarUsuario extends AppCompatActivity implements View.OnClickL
     private Button btnGrabar;
     private String mensaje;
 
-    private String url = "http://192.168.2.115:8888/";
+    private String url = "http://192.168.43.116:8888/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

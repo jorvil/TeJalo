@@ -5,6 +5,7 @@ import java.util.List;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import tejalo.com.pe.model.Distritos;
 import tejalo.com.pe.model.Usuario;
 
 import retrofit2.Call;
@@ -20,5 +21,8 @@ public interface RestService {
 
     @GET("api/usuarios/{nombre}/{password}")
     Call<List<Usuario>> loguear(@Path("nombre") String nombre,@Path("password") String password);
+
+    @GET("api/distritos")
+    Call<List<Distritos>> listarDistritos();
 
 }

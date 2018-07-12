@@ -30,7 +30,8 @@ public class ViajeFragment extends Fragment {
     private Spinner spiPartida;
     private ArrayAdapter<Distritos> adapterDistritos;
 
-    private String url = "http://192.168.43.116:8888/";
+    //private String url = "http://192.168.43.116:8888/";
+    private String url="http://intranet.fridaysperu.com:8888/";
 
     public ViajeFragment() {
 
@@ -81,8 +82,8 @@ public class ViajeFragment extends Fragment {
 
     private void mostrarFecha() {
         String dateFormat = "dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
-        edtFechaInicio.setText(sdf.format(cFechaInicio.getTime()));
+        //SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        //edtFechaInicio.setText(sdf.format(cFechaInicio.getTime()));
     }
 
 }

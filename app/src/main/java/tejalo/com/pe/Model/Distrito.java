@@ -1,8 +1,8 @@
-package tejalo.com.pe.model;
+package tejalo.com.pe.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Distritos {
+public class Distrito {
 
     @SerializedName("codigo")
     private Long codigo;

@@ -17,9 +17,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tejalo.com.pe.model.Usuario;
+import tejalo.com.pe.RestService.RestService;
+import tejalo.com.pe.Model.Usuario;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
+
+    private String url = "http://192.168.137.2:8888/";
+    //private String url="http://intranet.fridaysperu.com:8888/";
 
     private Retrofit retrofit;
     private RestService restService;
@@ -28,9 +32,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText edtPassword;
     private Button btnLogin;
     private TextView txtCrear;
-
-    //private String url = "http://192.168.43.116:8888/";
-    private String url="http://intranet.fridaysperu.com:8888/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +46,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         txtCrear.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
 
+        //
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         restService = retrofit.create(RestService.class);
+        //
     }
 
     @Override
@@ -66,7 +68,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void openRegistrarUsuario() {
-        Intent intent = new Intent(getBaseContext(), RegistrarUsuario.class);
+        Intent intent = new Intent(getBaseContext(), RegistrarUsuarioActivity.class);
         startActivity(intent);
     }
 

@@ -13,7 +13,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tejalo.com.pe.model.Usuario;
+import tejalo.com.pe.RestService.RestService;
+import tejalo.com.pe.Model.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<Usuario> adapter;
 
-    //private String url = "http://192.168.137.2:8888/";
-    private String url="http://intranet.fridaysperu.com:8888/";
+    private String url = "http://192.168.137.2:8888/";
+    //private String url="http://intranet.fridaysperu.com:8888/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

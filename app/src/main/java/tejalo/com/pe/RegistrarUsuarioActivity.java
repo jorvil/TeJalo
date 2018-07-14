@@ -15,14 +15,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tejalo.com.pe.model.Usuario;
+import tejalo.com.pe.RestService.RestService;
+import tejalo.com.pe.Model.Usuario;
 
-public class RegistrarUsuario extends AppCompatActivity implements View.OnClickListener {
+public class RegistrarUsuarioActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private String url = "http://192.168.137.2:8888/";
 
     private Retrofit retrofit;
     private RestService restService;
-
-    private Usuario usuario;
 
     private EditText edtNombre;
     private EditText edtApellido;
@@ -36,8 +37,6 @@ public class RegistrarUsuario extends AppCompatActivity implements View.OnClickL
 
     private Button btnGrabar;
     private String mensaje;
-
-    private String url = "http://192.168.43.116:8888/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

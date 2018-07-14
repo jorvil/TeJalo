@@ -1,4 +1,4 @@
-package tejalo.com.pe.model;
+package tejalo.com.pe.Model;
 
 import com.google.gson.annotations.SerializedName;
 

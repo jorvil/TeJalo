@@ -16,6 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import tejalo.com.pe.Fragment.PerfilFragment;
+import tejalo.com.pe.Fragment.ReservaFragment;
+import tejalo.com.pe.Fragment.ViajeFragment;
+
 public class PrincipalActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private DrawerLayout mDrawerLayout;
@@ -100,11 +104,11 @@ public class PrincipalActivity extends AppCompatActivity implements AdapterView.
                 f = new PerfilFragment();
                 break;
 
-            case 1: //Mi Ruta
+            case 1: //Mi Viajes
                 f = new ViajeFragment();
                 break;
 
-            case 2: //Mi Reserva
+            case 2: //Mi Reservas
                 f = new ReservaFragment();
                 break;
 

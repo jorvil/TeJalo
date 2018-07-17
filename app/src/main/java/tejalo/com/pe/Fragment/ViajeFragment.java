@@ -20,6 +20,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import tejalo.com.pe.Adapter.ViajeListadoConductorAdapter;
+import tejalo.com.pe.ConfirmarReservaActivity;
 import tejalo.com.pe.Globales;
 import tejalo.com.pe.Model.Usuario;
 import tejalo.com.pe.PublicarViajeActivity;
@@ -31,17 +32,20 @@ import tejalo.com.pe.Model.Viaje;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ViajeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class ViajeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener,AdapterView.OnItemClickListener {
 
     private String url = Globales.url;
 
-    private static final int REQUEST_VIAJE= 1;
+    private static final int REQUEST_VIAJE = 1;
+    private static final int REQUEST_CONFIRMAR_RESERVA= 2;
 
     private Retrofit retrofit;
     private RestService restService;
 
     private ListView listViaje;
     private Button btnPublicar;
+
+    List<Viaje> viajeList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +63,8 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
                 .build();
         restService = retrofit.create(RestService.class);
         //
+
+        listViaje.setOnItemClickListener(this);
         btnPublicar.setOnClickListener(this);
 
         listarViajexConductor(Globales.usuario);
@@ -100,6 +106,21 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+        Long viaje;
+        String fecha;
+        String origen;
+        String destino;
+
+        viaje = viajeList.get(position).getIdViaje();
+        fecha = viajeList.get(position).getFecha();
+        origen = viajeList.get(position).getOrigen().getNombre();
+        destino = viajeList.get(position).getDestino().getNombre();
+        confirmarRerva(viaje,fecha,origen,destino);
+    }
+
     public void abrirViaje() {
         Intent intent = new Intent(getActivity(), PublicarViajeActivity.class);
         startActivityForResult(intent,REQUEST_VIAJE);
@@ -111,7 +132,7 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
             public void onResponse(Call<List<Viaje>> call, Response<List<Viaje>> response) {
                 int resultado;
 
-                List<Viaje> viajeList = response.body();
+                viajeList = response.body();
 
                 if (viajeList == null) {
 
@@ -138,6 +159,15 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
             }
         });
 
+    }
+
+    public void confirmarRerva(Long idViaje,String fecha, String origen, String destino) {
+        Intent intent = new Intent(getActivity(), ConfirmarReservaActivity.class);
+        intent.putExtra("viaje",idViaje);
+        intent.putExtra("fecha",fecha);
+        intent.putExtra("origen",origen);
+        intent.putExtra("destino",destino);
+        startActivityForResult(intent,REQUEST_CONFIRMAR_RESERVA);
     }
 
 }

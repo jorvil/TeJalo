@@ -78,34 +78,30 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void loguear(String nombre, String password) {
-        restService.loguear(nombre, password).enqueue(new Callback<List<Usuario>>() {
+        restService.loguear(nombre, password).enqueue(new Callback<Usuario>() {
             @Override
-            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
-                int resultado;
+            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
 
-                List<Usuario> usuarioList = response.body();
+                Usuario usuario = response.body();
 
-                if (usuarioList == null) {
+                if (usuario == null) {
 
-                    Toast.makeText(getApplication(), "*** Usuario no existe ***", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication(), response.message(), Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    resultado = usuarioList.size();
+                    Globales.usuario = usuario.getCodigo();
+                    openActivity();
 
-                    if (resultado > 0) {
-                        Globales.usuario = usuarioList.get(0).getCodigo();
-                        openActivity();
-                    } else {
-                        Toast.makeText(getApplication(), "Usuario no existe o datos mal ingresados", Toast.LENGTH_LONG).show();
-                    }
                 }
 
             }
 
             @Override
-            public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                Log.e("RestService", "onFailure: ", t);
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                //Log.e("RestService", "onFailure: ", t);
+                Toast.makeText(getApplication(), t.toString(), Toast.LENGTH_LONG).show();
+
             }
         });
     }

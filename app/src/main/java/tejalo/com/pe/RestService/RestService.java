@@ -4,6 +4,7 @@ import java.util.List;
 
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import tejalo.com.pe.Model.Distrito;
 import tejalo.com.pe.Model.Reniec;
@@ -29,8 +30,12 @@ public interface RestService {
     Call<Usuario> grabarUsuario(@Body Usuario usuario);
 
     //Validar usuario y password de Usuario
+    //@GET("api/usuario/{nombre}/{password}")
+    //Call<List<Usuario>> loguear(@Path("nombre") String nombre, @Path("password") String password);
+
+    //Validar usuario y password de Usuario
     @GET("api/usuario/{nombre}/{password}")
-    Call<List<Usuario>> loguear(@Path("nombre") String nombre,@Path("password") String password);
+    Call<Usuario> loguear(@Path("nombre") String nombre, @Path("password") String password);
 
     //Grabar Viaje
     @POST("api/registrarViaje")
@@ -38,7 +43,7 @@ public interface RestService {
 
     //Listado de Viajes por Pasajero
     @GET("api/viaje/{distritoorigen}/{distritodestino}/{fecha}/{codigo}")
-    Call<List<Viaje>> listarViajexPasajero(@Path("distritoorigen") Long distritoOrigen,@Path("distritodestino") Long distritoDestino,@Path("fecha") String fecha,@Path("codigo") Long codigo);
+    Call<List<Viaje>> listarViajexPasajero(@Path("distritoorigen") Long distritoOrigen, @Path("distritodestino") Long distritoDestino, @Path("fecha") String fecha, @Path("codigo") Long codigo);
 
     //Grabar Reserva
     @POST("api/reservarViaje")
@@ -55,5 +60,13 @@ public interface RestService {
     //Buscar DNI en la Reniec
     @GET("api/Reniec/{DNI}")
     Call<Reniec> buscarDni(@Path("DNI") Long dni);
+
+    //Listado de Reservas de Conductor
+    @GET("api/reservaConductor/{idViaje}")
+    Call<List<Reserva>> listarReservaConductor(@Path("idViaje") Long idPasajero);
+
+    //Terminar las reservas del Conductor
+    @PUT("api/terminarViaje/{idViaje}")
+    Call<Viaje> terminarViaje(@Path("idViaje") Long idViaje);
 
 }

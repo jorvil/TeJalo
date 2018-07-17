@@ -8,13 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,9 +19,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tejalo.com.pe.Adapter.ViajeListadoAdapter;
-import tejalo.com.pe.Model.Distrito;
-import tejalo.com.pe.Model.Viaje;
+import tejalo.com.pe.Adapter.ReservaListadoAdapter;
+import tejalo.com.pe.Globales;
+import tejalo.com.pe.Model.Reserva;
 import tejalo.com.pe.R;
 import tejalo.com.pe.ReservarViajeActivity;
 import tejalo.com.pe.RestService.RestService;
@@ -34,21 +31,22 @@ import tejalo.com.pe.RestService.RestService;
  */
 public class ReservaFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
-    private String url = "http://192.168.137.2:8888/";
-    //private String url="http://intranet.fridaysperu.com:8888/";
+    private String url = Globales.url;
+
+    private static final int REQUEST_RESERVA= 1;
 
     private Retrofit retrofit;
     private RestService restService;
 
+    private ListView listReserva;
     private Button btnReservar;
-
-    private ListView listReservas;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reserva, container, false);
 
+        listReserva = view.findViewById(R.id.listReserva);
         btnReservar = view.findViewById(R.id.btnReservar);
 
         //
@@ -59,6 +57,8 @@ public class ReservaFragment extends Fragment implements View.OnClickListener, A
         restService = retrofit.create(RestService.class);
         //
         btnReservar.setOnClickListener(this);
+
+        listarReservaxPasajero(Globales.usuario);
 
         return view;
     }
@@ -83,27 +83,41 @@ public class ReservaFragment extends Fragment implements View.OnClickListener, A
 
     }
 
-    public void listarRerva(Long distritoOrigen, Long distritoDestino, String fecha) {
-        restService.buscarViaje(distritoOrigen, distritoDestino, fecha).enqueue(new Callback<List<Viaje>>() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_RESERVA) {
+            switch (resultCode) {
+                case -1:
+                    listarReservaxPasajero(Globales.usuario);
+                    break;
+            }
+        }
+
+    }
+
+    public void listarReservaxPasajero(Long idPasajero) {
+        restService.listarReservaxPasajero(idPasajero).enqueue(new Callback<List<Reserva>>() {
             @Override
-            public void onResponse(Call<List<Viaje>> call, Response<List<Viaje>> response) {
+            public void onResponse(Call<List<Reserva>> call, Response<List<Reserva>> response) {
                 int resultado;
 
-                List<Viaje> listViaje = response.body();
+                List<Reserva> reservaList = response.body();
 
-                if (listViaje == null) {
+                if (reservaList == null) {
 
                     Toast.makeText(getActivity(), "*** Reservas no encontradas ***", Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    resultado = listViaje.size();
+                    resultado = reservaList.size();
 
                     if (resultado > 0) {
-                        ViajeListadoAdapter adapter = new ViajeListadoAdapter(getActivity(), listViaje);
-                        listReservas.setAdapter(adapter);
+                        ReservaListadoAdapter adapter = new ReservaListadoAdapter(getActivity(), reservaList);
+                        listReserva.setAdapter(adapter);
                     } else {
-                        listReservas.setAdapter(null);
+                        listReserva.setAdapter(null);
                         Toast.makeText(getActivity(), "Reservas no encontradas", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -111,7 +125,7 @@ public class ReservaFragment extends Fragment implements View.OnClickListener, A
             }
 
             @Override
-            public void onFailure(Call<List<Viaje>> call, Throwable t) {
+            public void onFailure(Call<List<Reserva>> call, Throwable t) {
                 Log.e("RestService", "onFailure: ", t);
             }
         });
@@ -120,8 +134,7 @@ public class ReservaFragment extends Fragment implements View.OnClickListener, A
 
     public void abrirReserva() {
         Intent intent = new Intent(getActivity(), ReservarViajeActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,REQUEST_RESERVA);
     }
-
 
 }

@@ -22,8 +22,7 @@ import tejalo.com.pe.Model.Usuario;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
-    private String url = "http://192.168.137.2:8888/";
-    //private String url="http://intranet.fridaysperu.com:8888/";
+    private String url = Globales.url;
 
     private Retrofit retrofit;
     private RestService restService;
@@ -95,6 +94,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     resultado = usuarioList.size();
 
                     if (resultado > 0) {
+                        Globales.usuario = usuarioList.get(0).getCodigo();
                         openActivity();
                     } else {
                         Toast.makeText(getApplication(), "Usuario no existe o datos mal ingresados", Toast.LENGTH_LONG).show();

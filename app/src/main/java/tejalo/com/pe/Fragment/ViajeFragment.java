@@ -8,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -21,6 +19,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import tejalo.com.pe.Adapter.ViajeListadoConductorAdapter;
+import tejalo.com.pe.Globales;
 import tejalo.com.pe.Model.Usuario;
 import tejalo.com.pe.PublicarViajeActivity;
 import tejalo.com.pe.R;
@@ -33,12 +33,14 @@ import tejalo.com.pe.Model.Viaje;
  */
 public class ViajeFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private String url = "http://192.168.137.2:8888/";
-    //private String url="http://intranet.fridaysperu.com:8888/";
+    private String url = Globales.url;
+
+    private static final int REQUEST_VIAJE= 1;
 
     private Retrofit retrofit;
     private RestService restService;
 
+    private ListView listViaje;
     private Button btnPublicar;
 
     @Override
@@ -47,7 +49,7 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_viaje, container, false);
 
-
+        listViaje = view.findViewById(R.id.listViaje);
         btnPublicar = view.findViewById(R.id.btnPublicar);
 
         //
@@ -57,12 +59,12 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
                 .build();
         restService = retrofit.create(RestService.class);
         //
-
         btnPublicar.setOnClickListener(this);
+
+        listarViajexConductor(Globales.usuario);
 
         return view;
     }
-
 
     @Override
     public void onClick(View view) {
@@ -84,8 +86,58 @@ public class ViajeFragment extends Fragment implements View.OnClickListener, Ada
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_VIAJE) {
+            switch (resultCode) {
+                case -1:
+                    listarViajexConductor(Globales.usuario);
+                    break;
+            }
+        }
+
+    }
+
     public void abrirViaje() {
         Intent intent = new Intent(getActivity(), PublicarViajeActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,REQUEST_VIAJE);
     }
+
+    public void listarViajexConductor(Long idConductor) {
+        restService.listarViajexConductor(idConductor).enqueue(new Callback<List<Viaje>>() {
+            @Override
+            public void onResponse(Call<List<Viaje>> call, Response<List<Viaje>> response) {
+                int resultado;
+
+                List<Viaje> viajeList = response.body();
+
+                if (viajeList == null) {
+
+                    Toast.makeText(getActivity(), "*** Viajes no encontrados ***", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    resultado = viajeList.size();
+
+                    if (resultado > 0) {
+                        ViajeListadoConductorAdapter adapter = new ViajeListadoConductorAdapter(getActivity(), viajeList);
+                        listViaje.setAdapter(adapter);
+                    } else {
+                        listViaje.setAdapter(null);
+                        Toast.makeText(getActivity(), "Viajes no encontrados", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Viaje>> call, Throwable t) {
+                Log.e("RestService", "onFailure: ", t);
+            }
+        });
+
+    }
+
 }

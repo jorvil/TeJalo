@@ -6,22 +6,25 @@ public class Viaje {
 
     @SerializedName("idViaje")
     private Long idViaje;
-    @SerializedName("distritoOrigen")
-    private Long distritoOrigen;
-    @SerializedName("distritoDestino")
-    private Long distritoDestino;
     @SerializedName("fecha")
     private String fecha;
     @SerializedName("hora")
     private String hora;
     @SerializedName("cantidad")
     private int cantidad;
+    @SerializedName("disponible")
+    private int disponible;
     @SerializedName("tarifa")
     private double tarifa;
     @SerializedName("estado")
     private String estado;
+
     @SerializedName("usuario")
     private Usuario usuario;
+    @SerializedName("origen")
+    private Distrito origen;
+    @SerializedName("destino")
+    private Distrito destino;
 
     public Long getIdViaje() {
         return idViaje;
@@ -29,22 +32,6 @@ public class Viaje {
 
     public void setIdViaje(Long idViaje) {
         this.idViaje = idViaje;
-    }
-
-    public Long getDistritoOrigen() {
-        return distritoOrigen;
-    }
-
-    public void setDistritoOrigen(Long distritoOrigen) {
-        this.distritoOrigen = distritoOrigen;
-    }
-
-    public Long getDistritoDestino() {
-        return distritoDestino;
-    }
-
-    public void setDistritoDestino(Long distritoDestino) {
-        this.distritoDestino = distritoDestino;
     }
 
     public String getFecha() {
@@ -71,6 +58,14 @@ public class Viaje {
         this.cantidad = cantidad;
     }
 
+    public int getDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(int disponible) {
+        this.disponible = disponible;
+    }
+
     public double getTarifa() {
         return tarifa;
     }
@@ -93,5 +88,21 @@ public class Viaje {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public Distrito getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(Distrito origen) {
+        this.origen = origen;
+    }
+
+    public Distrito getDestino() {
+        return destino;
+    }
+
+    public void setDestino(Distrito destino) {
+        this.destino = destino;
     }
 }

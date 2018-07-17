@@ -2,6 +2,7 @@ package tejalo.com.pe;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,8 +33,7 @@ import tejalo.com.pe.RestService.RestService;
 
 public class PublicarViajeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private String url = "http://192.168.137.2:8888/";
-    //private String url="http://intranet.fridaysperu.com:8888/";
+    private String url = Globales.url;
 
     private Retrofit retrofit;
     private RestService restService;
@@ -48,10 +49,8 @@ public class PublicarViajeActivity extends AppCompatActivity implements View.OnC
     private EditText edtFecha;
     private EditText edtCantidad;
     private EditText edtTarifa;
-    private TextView txtMensaje;
 
     private Button btnGrabar;
-    private String mensaje;
 
     final Calendar cFecha = Calendar.getInstance();
 
@@ -65,7 +64,6 @@ public class PublicarViajeActivity extends AppCompatActivity implements View.OnC
         edtFecha = findViewById(R.id.edtFecha);
         edtCantidad = findViewById(R.id.edtCantidad);
         edtTarifa = findViewById(R.id.edtTarifa);
-        txtMensaje = findViewById(R.id.txtMensaje);
         btnGrabar = findViewById(R.id.btnGrabar);
 
         //
@@ -75,7 +73,6 @@ public class PublicarViajeActivity extends AppCompatActivity implements View.OnC
                 .build();
         restService = retrofit.create(RestService.class);
         //
-        setCurrentDateOnView();
 
         spiOrigen.setOnItemSelectedListener(this);
         spiDestino.setOnItemSelectedListener(this);
@@ -83,95 +80,8 @@ public class PublicarViajeActivity extends AppCompatActivity implements View.OnC
         btnGrabar.setOnClickListener(this);
 
         listarDistrito();
+        fechaActual();
 
-    }
-
-    private void listarDistrito() {
-        restService.listarDistrito().enqueue(new Callback<List<Distrito>>() {
-            @Override
-            public void onResponse(Call<List<Distrito>> call, Response<List<Distrito>> response) {
-                List<Distrito> distritoList = response.body();
-                //Origen
-                adapterDistritoOrigen = new ArrayAdapter<Distrito>(getApplicationContext(),
-                        android.R.layout.simple_spinner_item, distritoList);
-                adapterDistritoOrigen.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
-                spiOrigen.setAdapter(adapterDistritoOrigen);
-                //Origen
-                adapterDistritoDestino = new ArrayAdapter<Distrito>(getApplicationContext(),
-                        android.R.layout.simple_spinner_item, distritoList);
-                adapterDistritoDestino.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
-                spiDestino.setAdapter(adapterDistritoDestino);
-                //Destino
-                Log.d("RestService", "onResponse: " + distritoList.size());
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Distrito>> call, Throwable t) {
-                Log.e("RestService", "onFailure: ", t);
-            }
-        });
-    }
-
-    private void grabarViaje() {
-
-        Viaje viaje = new Viaje();
-        Usuario usuario = new Usuario();
-
-        usuario.setCodigo(Long.valueOf(1));
-
-        viaje.setDistritoOrigen(distritoOrigen);
-        viaje.setDistritoDestino(distritoDestino);
-        viaje.setFecha(edtFecha.getText().toString());
-        viaje.setHora("17:54");
-        viaje.setCantidad(Integer.valueOf(edtCantidad.getText().toString()));
-        viaje.setTarifa(Double.valueOf(edtTarifa.getText().toString()));
-        viaje.setEstado("P");
-        viaje.setUsuario(usuario);
-
-        restService.grabarViaje(viaje).enqueue(new Callback<Viaje>() {
-            @Override
-            public void onResponse(Call<Viaje> call, Response<Viaje> response) {
-
-                if (response.isSuccessful()) {
-                    mensaje = response.body().toString();
-                    //txtMensaje.setText("Registro OK - " + mensaje.toString());
-                    txtMensaje.setText("Viaje guardado correctamente");
-                    Log.e("post submitted to API.", response.body().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Viaje> call, Throwable t) {
-                Log.e("RestService", "onFailure: ", t);
-                txtMensaje.setText(t.toString());
-            }
-        });
-    }
-
-    DatePickerDialog.OnDateSetListener dateFecha = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            cFecha.set(Calendar.YEAR, year);
-            cFecha.set(Calendar.MONTH, monthOfYear);
-            cFecha.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            setCurrentDateOnView();
-        }
-    };
-
-    public void dateOnClickFecha(View view) {
-        new DatePickerDialog(this, dateFecha,
-                cFecha.get(Calendar.YEAR), cFecha.get(Calendar.MONTH), cFecha.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-    public void setCurrentDateOnView() {
-        String dateFormat = "dd-MM-yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
-        edtFecha.setText(sdf.format(cFecha.getTime()));
-    }
-
-    public int validarCampos() {
-        return 1;
     }
 
     @Override
@@ -214,6 +124,107 @@ public class PublicarViajeActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+    }
+
+    private void listarDistrito() {
+        restService.listarDistrito().enqueue(new Callback<List<Distrito>>() {
+            @Override
+            public void onResponse(Call<List<Distrito>> call, Response<List<Distrito>> response) {
+                List<Distrito> distritoList = response.body();
+                //Origen
+                adapterDistritoOrigen = new ArrayAdapter<Distrito>(getBaseContext(),
+                        android.R.layout.simple_spinner_item, distritoList);
+                adapterDistritoOrigen.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+                spiOrigen.setAdapter(adapterDistritoOrigen);
+                //Origen
+                //Destino
+                adapterDistritoDestino = new ArrayAdapter<Distrito>(getBaseContext(),
+                        android.R.layout.simple_spinner_item, distritoList);
+                adapterDistritoDestino.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+                spiDestino.setAdapter(adapterDistritoDestino);
+                //Destino
+                Log.d("RestService", "onResponse: " + distritoList.size());
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Distrito>> call, Throwable t) {
+                Log.e("RestService", "onFailure: ", t);
+            }
+        });
+    }
+
+    private void grabarViaje() {
+
+        Viaje viaje = new Viaje();
+
+        Usuario usuario = new Usuario();
+        Distrito origen = new Distrito();
+        Distrito destino = new Distrito();
+
+        usuario.setCodigo(Globales.usuario);
+        origen.setCodigo(distritoOrigen);
+        destino.setCodigo(distritoDestino);
+
+        viaje.setFecha(edtFecha.getText().toString());
+        viaje.setHora("09:00");
+        viaje.setCantidad(Integer.valueOf(edtCantidad.getText().toString()));
+        viaje.setDisponible(Integer.valueOf(edtCantidad.getText().toString()));
+        viaje.setTarifa(Double.valueOf(edtTarifa.getText().toString()));
+        viaje.setEstado("P");
+
+        viaje.setUsuario(usuario);
+        viaje.setOrigen(origen);
+        viaje.setDestino(destino);
+
+        restService.grabarViaje(viaje).enqueue(new Callback<Viaje>() {
+            @Override
+            public void onResponse(Call<Viaje> call, Response<Viaje> response) {
+
+                if (response.isSuccessful()) {
+                    //String mensaje = response.body().toString();
+                    Toast.makeText(PublicarViajeActivity.this, "Viaje registrado correctamente", Toast.LENGTH_LONG).show();
+                    Log.e("post submitted to API.", response.body().toString());
+
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Viaje> call, Throwable t) {
+                //Log.e("RestService", "onFailure: ", t);
+                Toast.makeText(PublicarViajeActivity.this, t.toString(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent();
+                setResult(RESULT_CANCELED, intent);
+            }
+        });
+    }
+
+    DatePickerDialog.OnDateSetListener dateFecha = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            cFecha.set(Calendar.YEAR, year);
+            cFecha.set(Calendar.MONTH, monthOfYear);
+            cFecha.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            fechaActual();
+        }
+    };
+
+    public void dateOnClickFecha(View view) {
+        new DatePickerDialog(this, dateFecha,
+                cFecha.get(Calendar.YEAR), cFecha.get(Calendar.MONTH), cFecha.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void fechaActual() {
+        String dateFormat = "dd-MM-yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        edtFecha.setText(sdf.format(cFecha.getTime()));
+    }
+
+    public int validarCampos() {
+        return 1;
     }
 
 }

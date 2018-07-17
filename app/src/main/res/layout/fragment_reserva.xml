@@ -3,13 +3,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical"
     tools:context=".Fragment.ReservaFragment">
+
+    <TextView
+        android:id="@+id/txtTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Mis Reservas"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnReservar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reservar Viaje"/>
+        android:text="Reservar ( + )" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/txtTitulo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Detalles de mis reservas"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30sp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtReserva"
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/textview_style"
+            android:gravity="center"
+            android:text="#"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtFecha"
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:background="@drawable/textview_style"
+            android:gravity="center"
+            android:text="Fecha"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtOrigen"
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.5"
+            android:background="@drawable/textview_style"
+            android:gravity="center"
+            android:text="Origen"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtDestino"
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.5"
+            android:background="@drawable/textview_style"
+            android:gravity="center"
+            android:text="Destino"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtConductor"
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:background="@drawable/textview_style"
+            android:gravity="center"
+            android:text="Conductor"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtTarifa"
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.5"
+            android:background="@drawable/textview_style"
+            android:gravity="center"
+            android:text="Tarifa"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/listReserva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
 
 </LinearLayout>

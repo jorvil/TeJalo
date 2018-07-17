@@ -21,6 +21,7 @@
 
         <EditText
             android:id="@+id/edtDni"
+            android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="DNI"
@@ -69,6 +70,7 @@
         android:text="Genero" />
 
     <RadioGroup
+        android:id="@+id/rgSexo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
